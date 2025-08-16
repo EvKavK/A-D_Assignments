@@ -2,55 +2,52 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        AnimalShelter shelter = new AnimalShelter();
         Scanner scanner = new Scanner(System.in);
+        UndoRedoManager<String> manager = new UndoRedoManager<>();
+
+        System.out.println("Undo/Redo Console App (ArrayList Version)");
+        System.out.println("Commands: add <text>, undo, redo, current, exit");
 
         while (true) {
-            System.out.println("\n===== Animal Shelter Menu =====");
-            System.out.println("1. Add a dog");
-            System.out.println("2. Add a cat");
-            System.out.println("3. Adopt any (oldest animal)");
-            System.out.println("4. Adopt a dog");
-            System.out.println("5. Adopt a cat");
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.print("> ");
+            String input = scanner.nextLine().trim();
 
-            int choice;
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting...");
+                break;
 
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                continue;
-            }
-
-            switch (choice) {
-                case 1 -> {
-                    System.out.print("Enter dog's name: ");
-                    String dogName = scanner.nextLine().trim();
-                    shelter.enqueue(dogName, "dog");
+            } else if (input.equalsIgnoreCase("undo")) {
+                if (manager.undo()) {
+                    System.out.println("Undo successful.");
+                } else {
+                    System.out.println("Nothing to undo.");
                 }
 
-                case 2 -> {
-                    System.out.print("Enter cat's name: ");
-                    String catName = scanner.nextLine().trim();
-                    shelter.enqueue(catName, "cat");
+            } else if (input.equalsIgnoreCase("redo")) {
+                if (manager.redo()) {
+                    System.out.println("Redo successful.");
+                } else {
+                    System.out.println("Nothing to redo.");
                 }
 
-                case 3 -> shelter.dequeueAny();
+            } else if (input.equalsIgnoreCase("current")) {
+                String state = manager.getCurrentState();
+                System.out.println("Current State: " + (state != null ? state : "None"));
 
-                case 4 -> shelter.dequeueType("dog");
-
-                case 5 -> shelter.dequeueType("cat");
-
-                case 6 -> {
-                    System.out.println("Goodbye!");
-                    scanner.close();
-                    return;
+            } else if (input.startsWith("add ")) {
+                String state = input.substring(4).trim();
+                if (!state.isEmpty()) {
+                    manager.addState(state);
+                    System.out.println("Added state: " + state);
+                } else {
+                    System.out.println("No state provided.");
                 }
-                
-                default -> System.out.println("Invalid choice, please try again.");
+
+            } else {
+                System.out.println("Unknown command. Try: add, undo, redo, current, exit");
             }
         }
+
+        scanner.close();
     }
 }
