@@ -2,52 +2,40 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        SingleLinkedList myList = new SingleLinkedList();
         Scanner scanner = new Scanner(System.in);
-        UndoRedoManager<String> manager = new UndoRedoManager<>();
-
-        System.out.println("Undo/Redo Console App (ArrayList Version)");
-        System.out.println("Commands: add <text>, undo, redo, current, exit");
 
         while (true) {
-            System.out.print("> ");
-            String input = scanner.nextLine().trim();
+            System.out.println("\nChoose an option:");
+            System.out.println("1 - Add Number");
+            System.out.println("2 - Delete Number by Position");
+            System.out.println("3 - Print List");
+            System.out.println("4 - Exit");
+            System.out.print("Your choice: ");
 
-            if (input.equalsIgnoreCase("exit")) {
-                System.out.println("Exiting...");
-                break;
+            int choice = scanner.nextInt();
 
-            } else if (input.equalsIgnoreCase("undo")) {
-                if (manager.undo()) {
-                    System.out.println("Undo successful.");
-                } else {
-                    System.out.println("Nothing to undo.");
-                }
-
-            } else if (input.equalsIgnoreCase("redo")) {
-                if (manager.redo()) {
-                    System.out.println("Redo successful.");
-                } else {
-                    System.out.println("Nothing to redo.");
-                }
-
-            } else if (input.equalsIgnoreCase("current")) {
-                String state = manager.getCurrentState();
-                System.out.println("Current State: " + (state != null ? state : "None"));
-
-            } else if (input.startsWith("add ")) {
-                String state = input.substring(4).trim();
-                if (!state.isEmpty()) {
-                    manager.addState(state);
-                    System.out.println("Added state: " + state);
-                } else {
-                    System.out.println("No state provided.");
-                }
-
-            } else {
-                System.out.println("Unknown command. Try: add, undo, redo, current, exit");
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter a number to add: ");
+                    int value = scanner.nextInt();
+                    myList.add(value);
+                    break;
+                case 2:
+                    System.out.print("Enter the position to delete: ");
+                    int pos = scanner.nextInt();
+                    myList.delete(pos);
+                    break;
+                case 3:
+                    myList.printList();
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice! Try again.");
             }
         }
-
-        scanner.close();
     }
 }
